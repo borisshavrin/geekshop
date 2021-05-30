@@ -9,12 +9,9 @@
 {% block content %}
     <!-- Page Content -->
     <div class="container">
-
         <div class="row">
-
             <div class="col-lg-3">
-
-                <h1 class="my-4">GeekShop</h1>
+                <h1 class="my-4">{{ title }}</h1>
                 <div class="list-group">
                     <a href="#" class="list-group-item">Новинки</a>
                     <a href="#" class="list-group-item">Одежда</a>
@@ -22,7 +19,6 @@
                     <a href="#" class="list-group-item">Аксессуары</a>
                     <a href="#" class="list-group-item">Подарки</a>
                 </div>
-
             </div>
             <!-- /.col-lg-3 -->
 
@@ -64,10 +60,10 @@
                             </a>
                             <div class="card-body">
                                 <h4 class="card-title">
-                                    <a href="#">Худи черного цвета с монограммами adidas Originals</a>
+                                    <a href="#">{{ products_list.item_1.name }}</a>
                                 </h4>
-                                <h5>6 090,00 руб.</h5>
-                                <p class="card-text">Мягкая ткань для свитшотов. Стиль и комфорт – это образ жизни.</p>
+                                <h5>{{ products_list.item_1.price }},00 руб.</h5>
+                                <p class="card-text">{{ products_list.item_1.description }}</p>
                             </div>
                             <div class="card-footer text-center">
                                 <button type="button" class="btn btn-outline-success">Отправить в корзину</button>
@@ -83,12 +79,10 @@
                             </a>
                             <div class="card-body">
                                 <h4 class="card-title">
-                                    <a href="#">Синяя куртка The North Face</a>
+                                    <a href="#">{{ products_list.item_2.name }}</a>
                                 </h4>
-                                <h5>23 725,00 руб.</h5>
-                                <p class="card-text">
-                                    Гладкая ткань. Водонепроницаемое покрытие. Легкий и теплый пуховый наполнитель.
-                                </p>
+                                <h5>{{ products_list.item_2.price }},00 руб.</h5>
+                                <p class="card-text">{{ products_list.item_2.description }}</p>
                             </div>
                             <div class="card-footer text-center">
                                 <button type="button" class="btn btn-outline-danger">Удалить из корзины</button>
@@ -104,10 +98,10 @@
                             </a>
                             <div class="card-body">
                                 <h4 class="card-title">
-                                    <a href="#">Коричневый спортивный oversized-топ ASOS DESIGN</a>
+                                    <a href="#">{{ products_list.item_3.name }}</a>
                                 </h4>
-                                <h5>3 390,00 руб.</h5>
-                                <p class="card-text">Материал с плюшевой текстурой. Удобный и мягкий.</p>
+                                <h5>{{ products_list.item_3.price }},00 руб.</h5>
+                                <p class="card-text">{{ products_list.item_3.description }}</p>
                             </div>
                             <div class="card-footer text-center">
                                 <button type="button" class="btn btn-outline-success">Отправить в корзину</button>
@@ -123,10 +117,10 @@
                             </a>
                             <div class="card-body">
                                 <h4 class="card-title">
-                                    <a href="#">Черный рюкзак Nike Heritage</a>
+                                    <a href="#">{{ products_list.item_4.name }}</a>
                                 </h4>
-                                <h5>2 340,00 руб.</h5>
-                                <p class="card-text">Плотная ткань. Легкий материал.</p>
+                                <h5>{{ products_list.item_4.price }},00 руб.</h5>
+                                <p class="card-text">{{ products_list.item_4.description }}</p>
                             </div>
                             <div class="card-footer text-center">
                                 <button type="button" class="btn btn-outline-success">Отправить в корзину</button>
@@ -141,10 +135,10 @@
                             </a>
                             <div class="card-body">
                                 <h4 class="card-title">
-                                    <a href="#">Черные туфли на платформе с 3 парами люверсов Dr Martens 1461 Bex</a>
+                                    <a href="#">{{ products_list.item_5.name }}</a>
                                 </h4>
-                                <h5>13 590,00 руб.</h5>
-                                <p class="card-text">Гладкий кожаный верх. Натуральный материал.</p>
+                                <h5>{{ products_list.item_5.price }},00 руб.</h5>
+                                <p class="card-text">{{ products_list.item_5.description }}</p>
                             </div>
                             <div class="card-footer text-center">
                                 <button type="button" class="btn btn-outline-success">Отправить в корзину</button>
@@ -160,10 +154,10 @@
                             </a>
                             <div class="card-body">
                                 <h4 class="card-title">
-                                    <a href="#">Темно-синие широкие строгие брюки ASOS DESIGN</a>
+                                    <a href="#">{{ products_list.item_6.name }}</a>
                                 </h4>
-                                <h5>2 890,00 руб.</h5>
-                                <p class="card-text">Легкая эластичная ткань сирсакер Фактурная ткань.</p>
+                                <h5>{{ products_list.item_6.price }},00 руб.</h5>
+                                <p class="card-text">{{ products_list.item_6.description }}</p>
                             </div>
                             <div class="card-footer text-center">
                                 <button type="button" class="btn btn-outline-success">Отправить в корзину</button>
