@@ -18,11 +18,8 @@ def products(request):
         'title': 'GeekShop',
     }
     with open('products/fixtures/products_list.json', encoding='UTF-8') as file:
-        products_dict = json.load(file)
-        for item, desc in products_dict.items():
-            context[item] = desc
+        products_list = json.load(file)
+        for idx, description in enumerate(products_list, start=1):
+            item = f'item_{idx}'
+            context[item] = description
     return render(request, 'products/products.html', context)
-
-
-def base(request):
-    return render(request, 'products/base.html')
