@@ -1,8 +1,9 @@
+import os.path
 from django.shortcuts import render
-
 import json
 
 # controllers = views = функции
+MODULE_DIR = os.path.dirname(__file__)
 
 
 def index(request):
@@ -17,8 +18,8 @@ def products(request):
     context = {
         'title': 'GeekShop',
     }
-    with open('products/fixtures/products_list.json', encoding='UTF-8') as file:
-        products_json = json.load(file)
-        products_list = products_json['products']
-        context['products'] = products_list
+    file_path = os.path.join(MODULE_DIR, 'fixtures/products_list.json')
+    file_json = open(file_path, encoding='utf-8')
+    products_list = json.load(file_json)
+    context['products'] = products_list['products']
     return render(request, 'products/products.html', context)
