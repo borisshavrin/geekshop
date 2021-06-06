@@ -1,0 +1,58 @@
+[
+  {
+    "model": "products.productcategory" ,
+    "pk": 1 ,
+    "fields": {
+      "name": "Одежда" ,
+      "description": "Описание для одежды"
+    }
+  } ,
+  {
+    "model": "products.productcategory" ,
+    "pk": 2 ,
+    "fields": {
+      "name": "Обувь" ,
+      "description": ""
+    }
+  } ,
+  {
+    "model": "products.productcategory" ,
+    "pk": 3 ,
+    "fields": {
+      "name": "Новинки" ,
+      "description": ""
+    }
+  } ,
+  {
+    "model": "products.productcategory" ,
+    "pk": 4 ,
+    "fields": {
+      "name": "Аксессуары" ,
+      "description": ""
+    }
+  } ,
+  {
+    "model": "products.productcategory" ,
+    "pk": 5 ,
+    "fields": {
+      "name": "Спортивная одежда" ,
+      "description": ""
+    }
+  } ,
+  {
+    "model": "products.productcategory" ,
+    "pk": 6 ,
+    "fields": {
+      "name": "Premium" ,
+      "description": ""
+    }
+  } ,
+  {
+    "model": "products.productcategory" ,
+    "pk": 7 ,
+    "fields": {
+      "name": "Аутлет" ,
+      "description": ""
+    }
+  }
+]
