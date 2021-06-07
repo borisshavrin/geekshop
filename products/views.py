@@ -1,8 +1,10 @@
+import os.path
 from django.shortcuts import render
-
 import json
+from products.models import Product, ProductCategory
 
 # controllers = views = функции
+MODULE_DIR = os.path.dirname(__file__)
 
 
 def index(request):
@@ -16,9 +18,34 @@ def index(request):
 def products(request):
     context = {
         'title': 'GeekShop',
+        'products': Product.objects.all(),
+        'categories': ProductCategory.objects.all(),
     }
-    with open('products/fixtures/products_list.json', encoding='UTF-8') as file:
-        products_json = json.load(file)
-        products_list = products_json['products']
-        context['products'] = products_list
+
+    if ProductCategory.objects.count() == 0 and Product.objects.count() == 0:
+        load_database_from_fixtures()
+
     return render(request, 'products/products.html', context)
+
+
+def load_database_from_fixtures():
+    # при создании фикстур pycharm ругается на кодировку и просит перевести ее в windows-1251
+    category_file_path = os.path.join(MODULE_DIR, 'fixtures/category.json')
+    category_file_json = open(category_file_path, encoding='windows-1251')
+    category_list = json.load(category_file_json)
+
+    for category_dict in category_list:
+        category = category_dict['fields']
+        db_product = ProductCategory(name=category['name'], description=category['description'])
+        db_product.save()
+
+    goods_file_path = os.path.join(MODULE_DIR, 'fixtures/goods.json')
+    goods_file_json = open(goods_file_path, encoding='windows-1251')
+    goods_list = json.load(goods_file_json)
+
+    for goods_dict in goods_list:
+        goods = goods_dict['fields']
+        category_id = ProductCategory.objects.get(id=goods['category'])
+        db_product = Product(name=goods['name'], images=goods['images'], description=goods['description'],
+                             price=goods['price'], quantity=goods['quantity'], category=category_id)
+        db_product.save()
