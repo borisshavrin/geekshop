@@ -15,7 +15,7 @@
                             <input name="basketID" type="number" class="form-control"
                                    value="{{ item.quantity }}" min="0">
                         </div>
-                        <div class="col-lg-4">2 390 руб.</div>
+                        <div class="col-lg-4">{{ item.sum }} руб.</div>
                         <div class="col-lg-4">
                             <a href="{% url 'basket:basket_remove' item.id %}">
                                 <i class="fas fa-trash"></i>
