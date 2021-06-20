@@ -6,12 +6,10 @@
             <div class="container-fluid">
                 {% if messages %}
                     <div class="alert {% if messages %} alert-success {% else %} alert-warning {% endif %}
-            alert-dismissible fade show" role="alert" style="margin-top: 50px;">
-                        {% if messages %}
-                            {% for message in messages %}
+                        alert-dismissible fade show" role="alert" style="margin-top: 50px;">
+                        {% for message in messages %}
                                 {{ message }}
-                            {% endfor %}
-                        {% endif %}
+                        {% endfor %}
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -59,16 +57,16 @@
                                         <td>{{ user.email }}</td>
                                         <td class="text-center">
                                             {% if user.is_staff %}
-                                                <i class="fas fa-check-circle">active</i>
+                                                <i class="fas fa-check-circle"></i>
                                             {% else %}
-                                                <i class="fas fa-times-circle">X</i>
+                                                <i class="fas fa-times-circle"></i>
                                             {% endif %}
                                         </td>
                                         <td class="text-center">
                                             {% if user.is_active %}
-                                                <i class="fas fa-check-circle">active</i>
+                                                <i class="fas fa-check-circle"></i>
                                             {% else %}
-                                                <i class="fas fa-times-circle">X</i>
+                                                <i class="fas fa-times-circle"></i>
                                             {% endif %}
                                         </td>
                                     </tr>
