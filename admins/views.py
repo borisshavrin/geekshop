@@ -49,4 +49,16 @@ def admin_users_update(request, id):
 
 
 def admin_users_delete(request, id):
-    pass
+    user = User.objects.get(id=id)
+    user.is_active = False
+    user.save()
+    messages.success(request, 'Пользователь деактивирован!')
+    return HttpResponseRedirect(reverse('admins:admin_users'))
+
+
+def admin_users_return(request, id):
+    user = User.objects.get(id=id)
+    user.is_active = True
+    user.save()
+    messages.success(request, 'Пользователь возобновлен!')
+    return HttpResponseRedirect(reverse('admins:admin_users'))
