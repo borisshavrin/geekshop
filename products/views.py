@@ -15,12 +15,10 @@ def index(request):
     return render(request, 'products/index.html', context)
 
 
-def products(request):
-    context = {
-        'title': 'GeekShop',
-        'products': Product.objects.all(),
-        'categories': ProductCategory.objects.all(),
-    }
+def products(request, category_id=None):
+    context = {'title': 'GeekShop', 'categories': ProductCategory.objects.all()}
+    products = Product.objects.filter(category_id=category_id) if category_id else Product.objects.all()
+    context.update({'products': products})
 
     if ProductCategory.objects.count() == 0 and Product.objects.count() == 0:
         load_database_from_fixtures()
