@@ -1,7 +1,9 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import messages
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import user_passes_test
+from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView
 
 from admins.forms import UserAdminRegisterForm, UserAdminProfileForm
 from users.models import User
@@ -13,25 +15,37 @@ def index(request):
 
 
 # CRUD
-@user_passes_test(lambda u: u.is_superuser)
-def admin_users(request):
-    context = {'title': 'GeekShop - Админ | Пользователи',
-               'users': User.objects.all()}
-    return render(request, 'admins/admin-users-read.html', context)
+# @user_passes_test(lambda u: u.is_superuser)
+# def admin_users(request):
+#     context = {'title': 'GeekShop - Админ | Пользователи',
+#                'users': User.objects.all()}
+#     return render(request, 'admins/admin-users-read.html', context)
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_users_create(request):
-    if request.method == 'POST':
-        form = UserAdminRegisterForm(data=request.POST, files=request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Пользователь создан!')
-            return HttpResponseRedirect(reverse('admins:admin_users'))
-    else:
-        form = UserAdminRegisterForm()
-    context = {'title': 'GeekShop - Админ | Регистрация', 'form': form}
-    return render(request, 'admins/admin-users-create.html', context)
+class AdminUsersListView(ListView):
+    model = User
+    template_name = 'admins/admin-users-read.html'
+
+
+# @user_passes_test(lambda u: u.is_superuser)
+# def admin_users_create(request):
+#     if request.method == 'POST':
+#         form = UserAdminRegisterForm(data=request.POST, files=request.FILES)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, 'Пользователь создан!')
+#             return HttpResponseRedirect(reverse('admins:admin_users'))
+#     else:
+#         form = UserAdminRegisterForm()
+#     context = {'title': 'GeekShop - Админ | Регистрация', 'form': form}
+#     return render(request, 'admins/admin-users-create.html', context)
+
+
+class AdminUsersCreateView(CreateView):
+    model = User
+    template_name = 'admins/admin-users-create.html'
+    form_class = UserAdminRegisterForm
+    success_url = reverse_lazy('admins:admin_users')
 
 
 @user_passes_test(lambda u: u.is_superuser)
