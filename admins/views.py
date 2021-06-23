@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import user_passes_test
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from admins.forms import UserAdminRegisterForm, UserAdminProfileForm
 from users.models import User
@@ -74,13 +74,25 @@ class AdminUsersUpdateView(UpdateView):
     success_url = reverse_lazy('admins:admin_users')
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_users_delete(request, id):
-    user = User.objects.get(id=id)
-    user.is_active = False
-    user.save()
-    messages.success(request, 'Пользователь деактивирован!')
-    return HttpResponseRedirect(reverse('admins:admin_users'))
+# @user_passes_test(lambda u: u.is_superuser)
+# def admin_users_delete(request, id):
+#     user = User.objects.get(id=id)
+#     user.is_active = False
+#     user.save()
+#     messages.success(request, 'Пользователь деактивирован!')
+#     return HttpResponseRedirect(reverse('admins:admin_users'))
+
+
+class AdminUsersDeleteView(DeleteView):
+    model = User
+    template_name = 'admins/admin-users-update-delete.html'
+    success_url = reverse_lazy('admins:admin_users')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 @user_passes_test(lambda u: u.is_superuser)
