@@ -26,6 +26,10 @@ class AdminUsersListView(ListView):
     model = User
     template_name = 'admins/admin-users-read.html'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(AdminUsersListView, self).get_context_data(**kwargs)
+        context['title'] = 'GeekShop - Админ | Пользователи'
+        return context
 
 # @user_passes_test(lambda u: u.is_superuser)
 # def admin_users_create(request):
@@ -46,6 +50,11 @@ class AdminUsersCreateView(CreateView):
     template_name = 'admins/admin-users-create.html'
     form_class = UserAdminRegisterForm
     success_url = reverse_lazy('admins:admin_users')
+
+    def get_context_data(self, **kwargs):
+        context = super(AdminUsersCreateView, self).get_context_data(**kwargs)
+        context['title'] = 'GeekShop - Админ | Регистрация'
+        return context
 
 
 # @user_passes_test(lambda u: u.is_superuser)
@@ -73,6 +82,11 @@ class AdminUsersUpdateView(UpdateView):
     form_class = UserAdminProfileForm
     success_url = reverse_lazy('admins:admin_users')
 
+    def get_context_data(self, **kwargs):
+        context = super(AdminUsersUpdateView, self).get_context_data(**kwargs)
+        context['title'] = 'GeekShop - Админ | Обновление пользователя'
+        return context
+
 
 # @user_passes_test(lambda u: u.is_superuser)
 # def admin_users_delete(request, id):
@@ -95,10 +109,17 @@ class AdminUsersDeleteView(DeleteView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_users_return(request, id):
-    user = User.objects.get(id=id)
-    user.is_active = True
-    user.save()
-    messages.success(request, 'Пользователь возобновлен!')
-    return HttpResponseRedirect(reverse('admins:admin_users'))
+# @user_passes_test(lambda u: u.is_superuser)
+# def admin_users_return(request, id):
+#     user = User.objects.get(id=id)
+#     user.is_active = True
+#     user.save()
+#     messages.success(request, 'Пользователь возобновлен!')
+#     return HttpResponseRedirect(reverse('admins:admin_users'))
+
+class AdminUsersReturnView(AdminUsersDeleteView):
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = True
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
