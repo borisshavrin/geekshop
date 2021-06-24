@@ -40,7 +40,7 @@
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'users:profile' user.id%}">{{ user.username }}
+                        <a class="nav-link" href="{% url 'users:profile' user.id %}">{{ user.username }}
                             <i class="fas fa-user-circle"></i>
                         </a>
                     </li>
@@ -64,7 +64,23 @@
         </div>
     </div>
 </nav>
-
+{% if messages or form.errors %}
+    <div class="alert {% if messages %} alert-success {% else %} alert-warning {% endif %}
+            alert-dismissible fade show" role="alert" style="margin-top: 50px;">
+        {% if messages %}
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        {% else %}
+            {% for error_field, error_message in form.errors.items %}
+                <li> {{ error_field }}: {{ error_message }}</li>
+            {% endfor %}
+        {% endif %}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endif %}
 {% block content %} {% endblock %}
 
 {% block footer %} {% endblock %}
