@@ -35,25 +35,6 @@ class UsersRegisterViews(SuccessMessageMixin, CreateView):
         return context
 
 
-# @login_required
-# def profile(request):
-#     user = request.user
-#     if request.method == 'POST':
-#         form = UserProfileForm(data=request.POST, files=request.FILES, instance=user)
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request, 'Данные успешно изменены!')
-#             return HttpResponseRedirect(reverse('users:profile'))
-#     else:
-#         form = UserProfileForm(instance=user)
-#     context = {
-#         'title': 'GeekShop - Личный кабинет',
-#         'form': form,
-#         'basket': Basket.objects.filter(user=user),
-#     }
-#     return render(request, 'users/profile.html', context)
-
-
 def logout(request):
     auth.logout(request)
     return HttpResponseRedirect(reverse('index'))
@@ -63,15 +44,17 @@ class UsersProfileView(SuccessMessageMixin, UpdateView):
     model = User
     template_name = 'users/profile.html'
     form_class = UserProfileForm
-    success_url = reverse_lazy('users:profile')
+    success_url = 'users:profile'
     success_message = 'Данные успешно изменены!'
-
 
     def get_context_data(self, **kwargs):
         context = super(UsersProfileView, self).get_context_data(**kwargs)
         context['title'] = 'GeekShop - Личный кабинет'
         context['basket'] = Basket.objects.filter(user=self.get_object())
         return context
+
+    def get_success_url(self):
+        return reverse_lazy(self.success_url, args=(self.request.user.id,))
 
     @method_decorator(login_required())
     def dispatch(self, request, *args, **kwargs):
