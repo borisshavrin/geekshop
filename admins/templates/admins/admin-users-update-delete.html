@@ -3,15 +3,6 @@
 {% block content %}
     <main>
         <div class="container-fluid">
-            {% if form.errors %}
-                <div class="alert alert-warning
-            alert-dismissible fade show" role="alert" style="margin-top: 50px;">
-                    {{ form.errors }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endif %}
             <h1 class="mt-4">Редактирование пользователя - {{ user.username }}</h1>
             <div class="card-body">
                 <form action="{% url 'admins:admin_users_update' user.id %}" method="post"

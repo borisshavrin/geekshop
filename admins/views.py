@@ -1,3 +1,4 @@
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -30,13 +31,13 @@ class AdminUsersListView(ListView):
         return super(AdminUsersListView, self).dispatch(request, *args, **kwargs)
 
 
-class AdminUsersCreateView(CreateView):
+class AdminUsersCreateView(SuccessMessageMixin, CreateView):
     model = User
     template_name = 'admins/admin-users-create.html'
     form_class = UserAdminRegisterForm
     success_url = reverse_lazy('admins:admin_users')
+    success_message = 'Пользователь создан!'
 
-    # messages.success(request, 'Пользователь создан!')
     def get_context_data(self, **kwargs):
         context = super(AdminUsersCreateView, self).get_context_data(**kwargs)
         context['title'] = 'GeekShop - Админ | Регистрация'
@@ -47,13 +48,13 @@ class AdminUsersCreateView(CreateView):
         return super(AdminUsersCreateView, self).dispatch(request, *args, **kwargs)
 
 
-class AdminUsersUpdateView(UpdateView):
+class AdminUsersUpdateView(SuccessMessageMixin, UpdateView):
     model = User
     template_name = 'admins/admin-users-update-delete.html'
     form_class = UserAdminProfileForm
     success_url = reverse_lazy('admins:admin_users')
+    success_message = 'Данные успешно изменены!'
 
-    # messages.success(request, 'Данные успешно изменены!')
     def get_context_data(self, **kwargs):
         context = super(AdminUsersUpdateView, self).get_context_data(**kwargs)
         context['title'] = 'GeekShop - Админ | Обновление пользователя'
@@ -64,12 +65,12 @@ class AdminUsersUpdateView(UpdateView):
         return super(AdminUsersUpdateView, self).dispatch(request, *args, **kwargs)
 
 
-class AdminUsersDeleteView(DeleteView):
+class AdminUsersDeleteView(SuccessMessageMixin, DeleteView):
     model = User
     template_name = 'admins/admin-users-update-delete.html'
     success_url = reverse_lazy('admins:admin_users')
+    success_message = 'Пользователь удален!'
 
-    # messages.success(request, 'Пользователь деактивирован!')
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.is_active = False
@@ -78,11 +79,13 @@ class AdminUsersDeleteView(DeleteView):
 
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def dispatch(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
         return super(AdminUsersDeleteView, self).dispatch(request, *args, **kwargs)
 
 
 class AdminUsersReturnView(AdminUsersDeleteView):
-    # messages.success(request, 'Пользователь возобновлен!')
+    success_message = 'Пользователь восстановлен!'
+
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.is_active = True
