@@ -1,5 +1,7 @@
 import os.path
 from django.shortcuts import render
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 import json
 from products.models import Product, ProductCategory
 
@@ -15,12 +17,19 @@ def index(request):
     return render(request, 'products/index.html', context)
 
 
-def products(request):
-    context = {
-        'title': 'GeekShop',
-        'products': Product.objects.all(),
-        'categories': ProductCategory.objects.all(),
-    }
+def products(request, category_id=None, page=1):
+    context = {'title': 'GeekShop', 'categories': ProductCategory.objects.all()}
+    products = Product.objects.filter(category_id=category_id) if category_id else Product.objects.all()
+
+    paginator = Paginator(products, 3)
+    try:
+        products_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        products_paginator = paginator.page(1)
+    except EmptyPage:
+        products_paginator = paginator.page(paginator.num_pages)
+
+    context.update({'products': products_paginator})
 
     if ProductCategory.objects.count() == 0 and Product.objects.count() == 0:
         load_database_from_fixtures()

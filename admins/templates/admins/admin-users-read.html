@@ -4,17 +4,6 @@
     <main>
         <div class="container-fluid">
             <div class="container-fluid">
-                {% if messages %}
-                    <div class="alert {% if messages %} alert-success {% else %} alert-warning {% endif %}
-                        alert-dismissible fade show" role="alert" style="margin-top: 50px;">
-                        {% for message in messages %}
-                                {{ message }}
-                        {% endfor %}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                {% endif %}
                 <h1 class="mt-4">Пользователи</h1>
                 <div class="card mb-4">
                     <div class="card-header">
@@ -45,10 +34,11 @@
                                 </tr>
                                 </tfoot>
                                 <tbody>
-                                {% for user in users %}
+                                {% for user in object_list %}
                                     <tr>
                                         <td>
-                                            <a href="{% url 'admins:admin_users_update' user.id %}" style="color: dodgerblue">
+                                            <a href="{% url 'admins:admin_users_update' user.id %}"
+                                               style="color: dodgerblue">
                                                 {{ user.username }}
                                             </a>
                                         </td>
