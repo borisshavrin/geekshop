@@ -24,6 +24,9 @@
             </div>
             <div class="card-footer text-center">
                 <div class="small"><a href="{% url 'users:register' %}">Нужен аккаунт? Зарегистрируйся!</a></div>
+                <div class="btn btn-round form-control"><a href="{% url 'social:begin' 'vk-oauth2' %}?next=/">
+                    Вход через ВКонтакте
+                </a></div>
             </div>
         </div>
     </div>
