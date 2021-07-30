@@ -2,6 +2,7 @@ import django.contrib.messages
 from django.contrib.auth.views import LoginView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import send_mail
+from django.db import transaction
 from django.views.generic.edit import CreateView, UpdateView
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -10,7 +11,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 
 from geekshop import settings
-from users.forms import UserLoginForm, UserRegisterForm, UserProfileForm
+from users.forms import UserLoginForm, UserRegisterForm, UserProfileForm, UserProfileEditForm
 from users.models import User
 from basket.models import Basket
 
@@ -69,15 +70,36 @@ def logout(request):
 
 
 class UsersProfileView(SuccessMessageMixin, UpdateView):
-    model = User
     template_name = 'users/profile.html'
-    form_class = UserProfileForm
     success_url = 'users:profile'
     success_message = 'Данные успешно изменены!'
+    form_class = UserProfileForm
+    model = User
+
+    def get(self, request, *args, **kwargs):
+        return self.render_to_response(
+            {'userprofileform': UserProfileForm(prefix='userprofileform_pre', instance=request.user),
+             'userprofileeditform': UserProfileEditForm(prefix='userprofileeditform_pre',
+                                                        instance=request.user.userprofile)})
 
     def get_context_data(self, **kwargs):
         context = super(UsersProfileView, self).get_context_data(**kwargs)
+        if self.request.method == 'POST':
+            userprofileform = UserProfileForm(
+                self.request.POST, instance=self.request.user, prefix='userprofileform_pre')
+            userprofileeditform = UserProfileEditForm(
+                self.request.POST, instance=self.request.user.userprofile, prefix='userprofileeditform_pre')
+
+            if userprofileform.is_valid() and userprofileeditform.is_valid():
+                userprofileform.save()
+                return HttpResponseRedirect(reverse('users:profile'))
+        else:
+            userprofileform = UserProfileForm(instance=self.request.user)
+            userprofileeditform = UserProfileEditForm(instance=self.request.user.userprofile)
+
         context['title'] = 'GeekShop - Личный кабинет'
+        context['userprofileform'] = userprofileform
+        context['userprofileeditform'] = userprofileeditform
         context['basket'] = Basket.objects.filter(user=self.get_object())
         return context
 

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'admins',
 
     'social_django',
+    'shapeshifter',
 ]
 
 MIDDLEWARE = [
