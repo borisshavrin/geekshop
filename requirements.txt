@@ -1,4 +1,4 @@
 Django~=3.2.3
 social_auth_app_django
 django-environ
-environ
+environ~=1.0

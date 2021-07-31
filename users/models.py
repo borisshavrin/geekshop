@@ -10,6 +10,7 @@ from django.utils.timezone import now
 class User(AbstractUser):
     image = models.ImageField(upload_to='users_images', blank=True)
 
+    image_url = models.URLField(blank=True)
     activation_key = models.CharField(max_length=128, blank=True)
     activation_key_expires = models.DateTimeField(default=(now() + timedelta(hours=48)))
 
