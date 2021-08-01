@@ -1,0 +1,24 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+
+        <div class="col-lg-5">
+            <div class="card shadow-lg border-0 rounded-lg mt-5">
+
+                <div class="card-body">
+                    {% if user %}
+                        <h1>Поздравляем!</h1>
+                        <p>с успешной активацией, теперь вы можете перейти на сайт.</p>
+                    {% else %}
+                        <h1>Ошибка!</h1>
+                        <p>Обратитесь к администратору и можете перейти на главную страницу.</p>
+                    {% endif %}
+                </div>
+
+                <div class="card-footer text-center">
+                    <div class="small"><a href="{% url 'index' %}">На главную страницу!</a></div>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}

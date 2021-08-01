@@ -21,35 +21,50 @@
                     <div class="form-row">
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label class="small mb-1" for="{{ form.first_name.id_for_label }}">Имя</label>
-                                {{ form.first_name }}
+                                <label class="small mb-1" for="{{ userprofileform.first_name.id_for_label }}">Имя</label>
+                                {{ userprofileform.first_name }}
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label class="small mb-1" for="{{ form.last_name.id_for_label }}">Фамилия</label>
-                                {{ form.last_name }}
+                                <label class="small mb-1" for="{{ userprofileform.last_name.id_for_label }}">Фамилия</label>
+                                {{ userprofileform.last_name }}
                             </div>
                         </div>
                     </div>
                     <div class="form-row mb-2">
                         <div class="col-lg-12">
                             <div class="custom-file">
-                                {{ form.image }}
-                                <label class="custom-file-label" for="{{ form.image.id_for_label }}">Выберите
+
+                                {{ userprofileform.image }}
+                                <label class="custom-file-label" for="{{ userprofileform.image.id_for_label }}">Выберите
                                     изображение</label>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-lg-6">
-                            <label class="small mb-1" for="{{ form.username.id_for_label }}">Имя пользователя</label>
-                            {{ form.username }}
+                            <label class="small mb-1" for="{{ userprofileform.username.id_for_label }}">Имя пользователя</label>
+                            {{ userprofileform.username }}
                         </div>
                         <div class="col-lg-6">
-                            <label class="small mb-1" for="{{ form.email.id_for_label }}">Адрес электронной
+                            <label class="small mb-1" for="{{ userprofileform.email.id_for_label }}">Адрес электронной
                                 почты</label>
-                            {{ form.email }}
+                            {{ userprofileform.email }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-6">
+                            <label class="small mb-1" for="{{ userprofileeditform.tagline.id_for_label }}">Тэг</label>
+                            {{ userprofileeditform.tagline }}
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="small mb-1" for="{{ userprofileeditform.gender.id_for_label }}">Пол</label>
+                            {{ userprofileeditform.gender }}
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="small mb-1" for="{{ userprofileeditform.about_me.id_for_label }}">О себе</label>
+                            {{ userprofileeditform.about_me }}
                         </div>
                     </div>
                     <div class="form-row">

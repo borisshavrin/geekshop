@@ -1,0 +1,28 @@
+{% extends "orders/base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <div class="row" style="justify-content: center">
+            {% include 'orders/includes/inc_order_summary.html' %}
+
+            <div  style="margin-top: 10px">
+                {% for item in object.orderitems.select_related %}
+                    <div style="display: flex; flex-direction: column">
+                        <div class="basket_record" style="display: flex; margin-bottom: 2px; flex-direction: row;justify-content: space-between; border-style: groove; border-width: 1px; align-items: center">
+                            <div style="width: 100px">
+                                <img class="card-img-top" src="{{ item.product.images.url }}" alt="">
+                            </div>
+                            <span class="category_name">{{ item.product.category.name }} </span>
+                            <span class="product_name">{{ item.product.name }} </span>
+                            <span class="product_price">{{ item.product.price }}&nbsp руб </span>
+                            <span class="product_quantitiy"> x {{ item.quantity }} шт. </span>
+                            <span class="product_cost"> = {{ item.get_product_cost }}&nbsp руб </span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% include 'orders/includes/inc_order_actions.html' %}
+        </div>
+    </div>
+{% endblock %}

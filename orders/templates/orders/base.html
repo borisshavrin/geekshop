@@ -14,7 +14,8 @@
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js"
+            crossorigin="anonymous"></script>
     <!-- Custom styles for this template -->
     {% block css %}
 
@@ -54,7 +55,7 @@
                                 </li>
 
                                 <li>
-                                    <a href="{% url 'orders:orders_list' %}">
+                                    <a href="">
                                         <p class="text-dark text-center text border-bottom">Заказы</p>
                                     </a>
                                 </li>
@@ -110,6 +111,7 @@
 <script src="{% static 'vendor/fontawesome/fontawesome-icons.js' %}" crossorigin="anonymous"></script>
 
 <script src="{% static 'js/basket.js' %}"></script>
+<script src="{% static 'js/orders.js' %}"></script>
 
 </body>
 
