@@ -45,9 +45,9 @@ INSTALLED_APPS = [
     'users',
     'basket',
     'admins',
+    'orders',
 
     'social_django',
-    'shapeshifter',
 ]
 
 MIDDLEWARE = [
@@ -88,17 +88,13 @@ TEMPLATES = [
 LOGIN_ERROR_URL = '/'
 SOCIAL_AUTH_VK_OAUTH2_IGNORE_DEFAULT_SCOPE = True
 SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']  # некий круг данных, который можем получить
-SOCIAL_AUTH_VK_EXTRA_DATA = [  # configure how the data is labelled on SocialAuth.extra_data
-    # pattern is (source key, destination key)
-    ('email', 'email'),
-]
 
-# очереди, котоые отвечают за свою обработку данных (обрабатывают информацию из контекста)
+# очереди, которые отвечают за свою обработку данных (обрабатывают информацию из контекста)
 SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_details',
     'social_core.pipeline.social_auth.social_uid',
-    'social_core.pipeline.social_auth.auth_allowed',  # разрешение авторизации
-    'social_core.pipeline.social_auth.social_user',  # инфа о пользователе
+    'social_core.pipeline.social_auth.auth_allowed',    # разрешение авторизации
+    'social_core.pipeline.social_auth.social_user',     # инфа о пользователе
     'social_core.pipeline.user.create_user',
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
@@ -176,8 +172,8 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 DOMAIN_NAME = 'http://127.0.0.1:8000'
 
 EMAIL_HOST = 'smtp.mailtrap.io'
-EMAIL_HOST_USER = 'be92b5a3c7a1d7'
-EMAIL_HOST_PASSWORD = '2c103d0aeb5b80'
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = '2525'
 EMAIL_USE_TLS = True
 
