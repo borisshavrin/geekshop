@@ -1,4 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.dispatch import receiver
+from django.db.models.signals import pre_save, pre_delete
 from django.db import transaction
 from django.forms import inlineformset_factory
 from django.http import HttpResponseRedirect
@@ -125,3 +127,27 @@ def order_forming_complete(request, pk):
     order.save()
 
     return HttpResponseRedirect(reverse('orders:orders_list'))
+
+
+@receiver(pre_save, sender=OrderItem)
+@receiver(pre_save, sender=Basket)
+def product_quantity_update_save(sender, update_fields, instance, **kwargs):
+    """ Изменение остатков товаров на складе при добавлении товаров в корзину или заказ
+        «sender» - класс отправителя;
+        «update_fields» - имена обновляемых полей;
+        «instance» - сам обновляемый объект """
+    if update_fields is 'quantity' or 'product':
+        if instance.pk:
+            instance.product.quantity -= instance.quantity - sender.get_item(instance.pk).quantity
+        else:
+            """Если объект не сохранен"""
+            instance.product.quantity -= instance.quantity
+        instance.product.save()
+
+
+@receiver(pre_delete, sender=OrderItem)
+@receiver(pre_delete, sender=Basket)
+def product_quantity_update_delete(sender, instance, **kwargs):
+    """ Изменение остатков товаров на складе при добавлении товаров в корзину или заказ """
+    instance.product.quantity += instance.quantity
+    instance.product.save()
