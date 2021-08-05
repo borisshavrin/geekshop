@@ -31,7 +31,7 @@ def products(request, category_id=None, page=1):
 
     context.update({'products': products_paginator})
 
-    if ProductCategory.objects.count() == 0 and Product.objects.count() == 0:
+    if ProductCategory.objects.count() == 0 or Product.objects.count() == 0:
         load_database_from_fixtures()
 
     return render(request, 'products/products.html', context)
