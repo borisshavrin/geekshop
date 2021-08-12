@@ -37,7 +37,7 @@ class OrderItemsCreateView(LoginRequiredMixin, CreateView):
         if self.request.POST:
             formset = OrderFormSet(self.request.POST)
         else:
-            basket_items = Basket.objects.filter(user=self.request.user)
+            basket_items = Basket.objects.filter(user=self.request.user).select_related('user')
             if len(basket_items):
                 OrderFormSet = inlineformset_factory(Order, OrderItem,
                                                      form=OrderItemForm, extra=len(basket_items))
@@ -142,6 +142,7 @@ def get_product_price(request, pk):
             return JsonResponse({'price': product.price})
         else:
             return JsonResponse({'price': 0})
+
 
 @receiver(pre_save, sender=OrderItem)
 @receiver(pre_save, sender=Basket)
