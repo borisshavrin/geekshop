@@ -22,3 +22,5 @@ webencodings==0.5.1
 widgetsnbextension==3.5.1
 django-debug-toolbar
 django-debug-toolbar-template-profiler
+django-extensions
+pydotplus
