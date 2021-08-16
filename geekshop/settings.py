@@ -175,10 +175,10 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
 DOMAIN_NAME = 'http://127.0.0.1:8000'
 
-EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-EMAIL_PORT = '2525'
+EMAIL_PORT = '587'
 EMAIL_USE_TLS = True
 
 AUTHENTICATION_BACKENDS = (

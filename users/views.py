@@ -41,9 +41,8 @@ class UsersRegisterViews(SuccessMessageMixin, CreateView):
         user = form.save()
         verify_link = reverse('users:verify', args=[user.email, user.activation_key])
         title = f'Подтверждение учетной записи {user.username}'
-        message = f'\nДля подтверждения Вашей учетной записи {user.email} на портале {settings.DOMAIN_NAME}' \
+        message = f'\nДля подтверждения Вашей учетной записи {user.email} на портале {settings.DOMAIN_NAME} ' \
                   f'перейдите по ссылке: \n{settings.DOMAIN_NAME}{verify_link}'
-        self.success_message += message
         send_mail(title, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
         return super(UsersRegisterViews, self).form_valid(form)
 
@@ -92,7 +91,7 @@ class UsersProfileView(SuccessMessageMixin, UpdateView):
 
             if userprofileform.is_valid() and userprofileeditform.is_valid():
                 userprofileform.save()
-                return HttpResponseRedirect(reverse('users:profile'))
+
         else:
             userprofileform = UserProfileForm(instance=self.request.user)
             userprofileeditform = UserProfileEditForm(instance=self.request.user.userprofile)
