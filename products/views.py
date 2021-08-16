@@ -3,6 +3,9 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 from django.core.cache import cache
+from django.template.loader import render_to_string
+from django.views.decorators.cache import cache_page
+from django.http import JsonResponse
 
 import json
 from products.models import Product, ProductCategory
@@ -132,3 +135,39 @@ def get_products_in_category_ordered_by_price(pk):
         return products
     else:
         return Product.objects.filter(category__pk=pk, is_active=True).order_by('price')
+
+
+def products_ajax(request, category_id=None, page=1):
+    if request.is_ajax():
+        links_menu = get_links_menu()
+
+        if category_id:
+            if category_id == '0':
+                category = {
+                    'category_id': 0
+                }
+                products = get_products_ordered_by_price()
+            else:
+                category = get_category(category_id)
+                products = get_products_in_category_ordered_by_price(category_id)
+
+            paginator = Paginator(products, 2)
+            try:
+                products_paginator = paginator.page(page)
+            except PageNotAnInteger:
+                products_paginator = paginator.page(1)
+            except EmptyPage:
+                products_paginator = paginator.page(paginator.num_pages)
+
+            content = {
+                'links_menu': links_menu,
+                'category': category,
+                'products': products_paginator,
+            }
+
+            result = render_to_string(
+                'products/products.html',
+                context=content,
+                request=request)
+
+            return JsonResponse({'result': result})
