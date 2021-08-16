@@ -10,7 +10,7 @@ from basket.models import Basket
 @login_required
 def basket_add(request, product_id):
     product = Product.objects.get(id=product_id)
-    basket = Basket.objects.filter(user=request.user, product=product)
+    basket = Basket.objects.filter(user=request.user, product=product).select_related('product', 'user')
 
     if not basket.exists():
         Basket.objects.create(user=request.user, product=product, quantity=1)
@@ -37,7 +37,7 @@ def basket_edit(request, id, quantity):
             basket.save()
         else:
             basket.delete()     # если кол-во товара снижено до 0, то этот товар удаляется
-        baskets = Basket.objects.filter(user=request.user)
+        baskets = Basket.objects.filter(user=request.user).select_related('user')
         context = {'basket': baskets}
         result = render_to_string('basket/basket.html', context)
         return JsonResponse({'result': result})
