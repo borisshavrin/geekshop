@@ -6,7 +6,7 @@ from django.forms import inlineformset_factory
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, CreateView, RedirectView, UpdateView, DetailView, DeleteView
+from django.views.generic import ListView, CreateView, RedirectView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
 
 from basket.models import Basket
@@ -65,7 +65,9 @@ class OrderItemsCreateView(LoginRequiredMixin, CreateView):
                 orderitems.instance = self.object
                 orderitems.save()
 
-        if self.object.get_total_cost() == 0:
+        # удаляем пустой заказ
+        get_summary = self.object.get_summary()
+        if get_summary['total_cost'] == 0:
             self.object.delete()
 
         return super(OrderItemsCreateView, self).form_valid(form)
@@ -88,6 +90,8 @@ class OrderItemsUpdateView(LoginRequiredMixin, UpdateView):
             formset = OrderFormSet(instance=self.object)
             for form in formset.forms:
                 if form.instance.pk:
+                    form.initial['product'] = form.instance.product
+                    form.initial['quantity'] = form.instance.product.quantity
                     form.initial['price'] = form.instance.product.price
 
         context['orderitems'] = formset
@@ -105,7 +109,8 @@ class OrderItemsUpdateView(LoginRequiredMixin, UpdateView):
                 orderitems.save()
 
         # удаляем пустой заказ
-        if self.object.get_total_cost() == 0:
+        get_summary = self.object.get_summary()
+        if get_summary['total_cost'] == 0:
             self.object.delete()
 
         return super(OrderItemsUpdateView, self).form_valid(form)

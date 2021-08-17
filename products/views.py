@@ -1,6 +1,11 @@
 import os.path
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.conf import settings
+from django.core.cache import cache
+from django.template.loader import render_to_string
+from django.views.decorators.cache import cache_page
+from django.http import JsonResponse
 
 import json
 from products.models import Product, ProductCategory
@@ -18,8 +23,8 @@ def index(request):
 
 
 def products(request, category_id=None, page=1):
-    context = {'title': 'GeekShop', 'categories': ProductCategory.objects.all()}
-    products = Product.objects.filter(category_id=category_id).select_related('category') if category_id else Product.objects.all()
+    context = {'title': 'GeekShop', 'categories': get_links_menu()}
+    products = get_products_in_category_ordered_by_price(category_id) if category_id else get_products()
 
     paginator = Paginator(products, 3)
     try:
@@ -58,3 +63,111 @@ def load_database_from_fixtures():
         db_product = Product(name=goods['name'], images=goods['images'], description=goods['description'],
                              price=goods['price'], quantity=goods['quantity'], category=category_id)
         db_product.save()
+
+
+def get_links_menu():
+    if settings.LOW_CACHE:
+        key = 'links_menu'
+        links_menu = cache.get(key)
+        if links_menu is None:
+            links_menu = ProductCategory.objects.all()
+            cache.set(key, links_menu)
+        return links_menu
+    else:
+        return ProductCategory.objects.all()
+
+
+def get_category(pk):
+    if settings.LOW_CACHE:
+        key = f'category_{pk}'
+        category = cache.get(key)
+        if category is None:
+            category = get_object_or_404(ProductCategory, pk=pk)
+            cache.set(key, category)
+        return category
+    else:
+        return get_object_or_404(ProductCategory, pk=pk)
+
+
+def get_products():
+    if settings.LOW_CACHE:
+        key = 'products'
+        products = cache.get(key)
+        if products is None:
+            products = Product.objects.filter(is_active=True).select_related('category')
+            cache.set(key, products)
+        return products
+    else:
+        return Product.objects.filter(is_active=True).select_related('category')
+
+
+def get_product(pk):
+    if settings.LOW_CACHE:
+        key = f'product_{pk}'
+        product = cache.get(key)
+        if product is None:
+            product = get_object_or_404(Product, pk=pk)
+            cache.set(key, product)
+        return product
+    else:
+        return get_object_or_404(Product, pk=pk)
+
+
+def get_products_ordered_by_price():
+    if settings.LOW_CACHE:
+        key = 'products_ordered_by_price'
+        products = cache.get(key)
+        if products is None:
+            products = Product.objects.filter(is_active=True).order_by('price')
+            cache.set(key, products)
+        return products
+    else:
+        return Product.objects.filter(is_active=True).order_by('price')
+
+
+def get_products_in_category_ordered_by_price(pk):
+    if settings.LOW_CACHE:
+        key = f'products_in_category_ordered_by_price_{pk}'
+        products = cache.get(key)
+        if products is None:
+            products = Product.objects.filter(category__pk=pk, is_active=True).order_by('price')
+            cache.set(key, products)
+        return products
+    else:
+        return Product.objects.filter(category__pk=pk, is_active=True).order_by('price')
+
+
+def products_ajax(request, category_id=None, page=1):
+    if request.is_ajax():
+        links_menu = get_links_menu()
+
+        if category_id:
+            if category_id == '0':
+                category = {
+                    'category_id': 0
+                }
+                products = get_products_ordered_by_price()
+            else:
+                category = get_category(category_id)
+                products = get_products_in_category_ordered_by_price(category_id)
+
+            paginator = Paginator(products, 2)
+            try:
+                products_paginator = paginator.page(page)
+            except PageNotAnInteger:
+                products_paginator = paginator.page(1)
+            except EmptyPage:
+                products_paginator = paginator.page(paginator.num_pages)
+
+            content = {
+                'links_menu': links_menu,
+                'category': category,
+                'products': products_paginator,
+            }
+
+            result = render_to_string(
+                'products/products.html',
+                context=content,
+                request=request)
+
+            return JsonResponse({'result': result})

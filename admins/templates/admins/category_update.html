@@ -1,0 +1,23 @@
+{% extends 'admins/base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+    <div class="row">
+        <form class="form-horizontal" style="margin: 50px 50px 50px" action="{% url 'admins:category_update' pk=productcategory.id %}" method="post"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <input class="form-control" type="submit" value="сохранить">
+        </form>
+        <button class="btn btn-round form-control last">
+            <a href="{% url 'admins:categories' %}" class="">
+                К категориям
+            </a>
+        </button>
+    </div>
+
+{% endblock %}
