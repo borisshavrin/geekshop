@@ -6,6 +6,9 @@ from django.core.cache import cache
 from django.template.loader import render_to_string
 from django.views.decorators.cache import cache_page
 from django.http import JsonResponse
+from django.dispatch import receiver
+from django.db.models.signals import pre_save
+from django.db import connection
 
 import json
 from products.models import Product, ProductCategory
@@ -171,3 +174,25 @@ def products_ajax(request, category_id=None, page=1):
                 request=request)
 
             return JsonResponse({'result': result})
+
+
+def db_profile_by_type(prefix, type, queries):
+    """Ф-ия отфильтровывает запросы определенного типа (например, «UPDATE», «DELETE», «SELECT», «INSERT INTO»)"""
+    update_queries = list(filter(lambda x: type in x['sql'], queries))
+    print(f'db_profile {type} for {prefix}:')
+    [print(query['sql']) for query in update_queries]
+
+
+@receiver(pre_save, sender=ProductCategory)
+def product_is_active_update_productcategory_save(sender, instance, **kwargs):
+    """Вместо работы с методами классов «ProductCategoryUpdateView()» и «ProductCategoryDeleteView()»
+        воспользовались механизмом сигналов - так будет меньше кода.  Атрибут «product_set Django»
+        создан автоматически для связи с моделью Product по внешнему ключу. В этом атрибуте получаем QuerySet,
+        который позволяет получить все продукты в данной категории и применяем к нему метод «.update()»."""
+    if instance.pk:
+        if instance.is_active:
+            instance.product_set.update(is_active=True)
+        else:
+            instance.product_set.update(is_active=False)
+
+        db_profile_by_type(sender, 'UPDATE', connection.queries)
